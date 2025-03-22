@@ -51,3 +51,138 @@ This web application displays lists of board games and their reviews. While anyo
   - username: bugs    |     password: bunny (user role)
   - username: daffy   |     password: duck  (manager role)
 5. You can also sign-up as a new user and customize your role to play with the application! 😊
+
+# Jenkins Pipeline Documentation
+
+## Overview
+This Jenkins pipeline automates the CI/CD process for a Java-based project using Maven, SonarQube, Nexus, Docker, and AWS EKS. The pipeline includes code compilation, testing, security scanning, quality checks, artifact deployment, containerization, and Kubernetes deployment.
+
+## Prerequisites
+Ensure that the following tools and configurations are available:
+- **Jenkins installed and configured**
+- **Java Development Kit (JDK 17) installed**
+- **Maven installed and configured**
+- **SonarQube server configured**
+- **Trivy installed for security scans**
+- **Docker installed and configured**
+- **AWS CLI configured with access to EKS**
+- **Nexus repository setup for artifact storage**
+- **Git repository with source code**
+- **Valid credentials for Git, SonarQube, Nexus, DockerHub, and AWS EKS**
+
+## Pipeline Stages
+
+### 1. Git Checkout
+- Fetches the source code from the Git repository.
+- Requires a valid Git credential (`git-cred`).
+
+```sh
+git clone -b main https://github.com/amitpandey1992/DevOps_CICD.git
+```
+
+### 2. Compile
+- Compiles the source code using Maven.
+
+```sh
+mvn compile
+```
+
+### 3. Test
+- Runs unit tests using Maven.
+
+```sh
+mvn test
+```
+
+### 4. File System Scan
+- Scans the file system using Trivy for vulnerabilities.
+
+```sh
+trivy fs --format table -o trivy-fs-report.html .
+```
+
+### 5. SonarQube Analysis
+- Performs static code analysis using SonarQube.
+- Requires SonarQube scanner configured as `sonar`.
+
+```sh
+sonar-scanner -Dsonar.projectName=BoardGame -Dsonar.projectKey=BoardGame -Dsonar.java.binaries=.
+```
+
+### 6. Quality Gate Check
+- Waits for SonarQube quality gate results.
+
+```sh
+waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+```
+
+### 7. Build
+- Packages the application using Maven.
+
+```sh
+mvn package
+```
+
+### 8. Publish to Nexus
+- Deploys the artifact to Nexus repository.
+- Requires Nexus credentials (`global-settings`).
+
+```sh
+mvn deploy
+```
+
+### 9. Build & Tag Docker Image
+- Builds a Docker image from the application.
+- Tags the image for DockerHub.
+- Requires Docker credentials (`docker-cred`).
+
+```sh
+docker build -t amitpandey18/boardshack:latest .
+```
+
+### 10. Docker Image Scan
+- Scans the Docker image for vulnerabilities using Trivy.
+
+```sh
+trivy image --format table -o trivy-image-report.html amitpandey18/boardshack:latest
+```
+
+### 11. Push Docker Image
+- Pushes the Docker image to DockerHub.
+
+```sh
+docker push amitpandey18/boardshack:latest
+```
+
+### 12. Deploy to AWS EKS
+- Deploys the application to an Amazon EKS cluster.
+- Requires AWS credentials (`aws-eks-credentials`).
+
+```sh
+aws eks update-kubeconfig --name boardgame-cluster --region us-east-1
+kubectl apply -f deployment-service.yaml
+```
+
+## Required Jenkins Plugins
+To run this pipeline successfully, install the following plugins:
+
+1. **Pipeline** – Supports scripted and declarative pipelines.
+2. **Git Plugin** – Enables Git repository integration.
+3. **Maven Integration Plugin** – Allows building Java projects with Maven.
+4. **SonarQube Scanner Plugin** – Integrates SonarQube for code analysis.
+5. **Trivy Plugin (optional)** – Supports security scanning for files and Docker images.
+6. **Pipeline: AWS Steps** – Provides AWS CLI support in Jenkins pipelines.
+7. **Kubernetes CLI Plugin** – Enables Kubernetes interaction through `kubectl`.
+8. **Docker Pipeline Plugin** – Facilitates building and pushing Docker images.
+9. **Nexus Artifact Uploader Plugin** – Supports artifact uploads to Nexus.
+10. **Email Extension Plugin (optional)** – Sends email notifications on pipeline status.
+
+## Conclusion
+This Jenkins pipeline automates the CI/CD workflow for a Java application, ensuring smooth code integration, testing, security checks, artifact management, and deployment to AWS EKS. By integrating quality gates and security scanning, it enhances application reliability before deployment.
+
+---
+
+**Author:** Amit Pandey  
+**Repository:** [GitHub - DevOps_CICD](https://github.com/amitpandey1992/DevOps_CICD)
+
+
