@@ -49,6 +49,8 @@ mvn test
 ```sh
 trivy fs --format table -o trivy-fs-report.html .
 ```
+![image](https://github.com/user-attachments/assets/55530467-c7d1-4cef-b049-cf3ed1fddd6f)
+
 
 ### 5. SonarQube Analysis
 - Performs static code analysis using SonarQube.
@@ -64,6 +66,7 @@ sonar-scanner -Dsonar.projectName=BoardGame -Dsonar.projectKey=BoardGame -Dsonar
 ```sh
 waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
 ```
+![image](https://github.com/user-attachments/assets/224224e7-dce6-4c8c-8b9e-8b9c5f83acf2)
 
 ### 7. Build
 - Packages the application using Maven.
@@ -79,6 +82,7 @@ mvn package
 ```sh
 mvn deploy
 ```
+![image](https://github.com/user-attachments/assets/1fc3f6b1-db3f-48eb-bfc5-acf20d9f7da6)
 
 ### 9. Build & Tag Docker Image
 - Builds a Docker image from the application.
@@ -95,6 +99,7 @@ docker build -t amitpandey18/boardshack:latest .
 ```sh
 trivy image --format table -o trivy-image-report.html amitpandey18/boardshack:latest
 ```
+![image](https://github.com/user-attachments/assets/383359dc-3716-41f4-bf73-d6cc45ecc9f1)
 
 ### 11. Push Docker Image
 - Pushes the Docker image to DockerHub.
@@ -102,6 +107,7 @@ trivy image --format table -o trivy-image-report.html amitpandey18/boardshack:la
 ```sh
 docker push amitpandey18/boardshack:latest
 ```
+![image](https://github.com/user-attachments/assets/e4a9e7fa-d416-4f63-9191-5af5e93df32d)
 
 ### 12. Deploy to AWS EKS
 - Deploys the application to an Amazon EKS cluster.
