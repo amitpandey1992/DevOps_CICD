@@ -3,7 +3,7 @@
 ## Overview
 This Jenkins pipeline automates the CI/CD process for a Java-based project using Maven, SonarQube, Nexus, Docker, and AWS EKS. The pipeline includes code compilation, testing, security scanning, quality checks, artifact deployment, containerization, and Kubernetes deployment.
 
-## Prerequisites
+## Prerequisites 
 Ensure that the following tools and configurations are available:
 - **Jenkins installed and configured**
 - **Java Development Kit (JDK 17) installed**
