@@ -18,6 +18,9 @@ Ensure that the following tools and configurations are available:
 
 ## Pipeline Stages
 
+![image](https://github.com/user-attachments/assets/c7ffbbb0-a4aa-4709-b43d-95421ae261e8)
+
+
 ### 1. Git Checkout
 - Fetches the source code from the Git repository.
 - Requires a valid Git credential (`git-cred`).
